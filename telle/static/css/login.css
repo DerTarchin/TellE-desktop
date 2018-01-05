@@ -1,0 +1,118 @@
+body {
+	color: white;
+	font-family: 'Lato', sans-serif;
+	font-weight: 100;
+}
+
+.bg {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	z-index: -1;
+	width: 100%;
+	height: 100%;
+	-webkit-filter: blur(30px);
+	-moz-filter: blur(30px);
+	-o-filter: blur(30px);
+	-ms-filter: blur(30px);
+	filter: blur(30px);
+}
+
+.bg img {
+	height: 100%;
+	width: 100%;
+	transform:scale(1.4);
+    -ms-transform:scale(1.4);
+    -moz-transform:scale(1.4); 
+    -webkit-transform:scale(1.4);
+    -o-transform:scale(1.4);
+}
+
+.login-page {
+	background-color: rgba(29,29,29,0.5);
+	height: 100vh;
+	width: 100%;
+}
+
+.login-left {
+	display: flex;
+	-ms-display: flex;
+	align-items: center;
+	-ms-align-items: center;
+	justify-content: center;
+	-ms-justify-content: center;
+	text-align: center;
+	padding: 10%;
+	height: 100%;
+	fill: white;
+	font-size: 15px;
+}
+
+.login-left p {
+	text-transform: uppercase;
+	text-align: left;
+}
+
+.login-right {
+	display: flex;
+	-ms-display: flex;
+	align-items: center;
+	-ms-align-items: center;
+	justify-content: center;
+	-ms-justify-content: center;
+	text-align: center;
+	padding: 10%;
+	height: 100%;
+	fill: white;
+	font-size: 15px;
+}
+
+form {
+	width: 100%;
+}
+
+input {
+	background-color: transparent;
+	border-bottom: 2px solid white;
+	border-left: 0;
+	border-right: 0;
+	font-size: 20px;
+	text-align: right;
+}
+
+input[type=text] {
+	border: 0;
+	margin-bottom: 4px;
+	width: 50%;
+}
+
+input[type=password] {
+	border-top: 2px solid rgba(255,255,255,0.5);
+	border-bottom: 0;
+	width: 50%;
+}
+
+input[type=submit] {
+	border: 0;
+	margin-top:30px;
+}
+
+a {
+	text-decoration: none;
+	color: rgba(255,255,255,0.5);
+}
+
+a:hover {
+	color: white;
+}
+
+h3 {
+	font-weight: 400;
+	margin-bottom: 60px;
+}
+
+.bold {
+	font-size: 20px;
+	font-weight: 400;
+}
