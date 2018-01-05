@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block movies_icon_state %}
+{% endblock %}
+
+{% block shows_icon_state %}
+selected
+{% endblock %}
+
+{% block default_filter %}
+	<input type="hidden" id="master-default-filter" value="{{ user.settings.show_default_filter }}">
+	<script type="text/javascript">
+		{% if user.settings.show_default_filter == "all" %}
+			$('.filter[data-filter="*"]').addClass('active');
+		{% else %}
+			$('.filter[data-filter=".{{ user.settings.show_default_filter }}"]').addClass('active');
+		{% endif %}
+	</script>
+{% endblock %}
+
+{% block content %}
+<!-- Show Posters -->
+<div class="row nopadding grid scene_element scene_element--fadeinright">
+	{% if media %}
+		{% for item in media %}
+			<!-- {{ item.title }} -->
+			{% include user.settings.show_view_mode|add:".html" with type="show" %}
+			<!-- content for info panel -->
+			<div class="info-for-panel" trakt_id="{{ item.trakt_id }}">
+				<div class="background">
+	                <img {% if item.fanart_url %}src="{% static 'imgs/placeholder_fanart.png' %}" data-original="{{ item.fanart_url }}"{% else %}style="display:none;"{% endif %}>
+	            </div>
+	            <div class="content">
+	                <div class="info-pane-content">
+	                	{% if item.poster_url %}
+		                    <div class="info-pane-img">
+		                    	{% if user.settings.show_view_mode == "poster" and item.fanart_url %}
+			                    	<img src="{% static 'imgs/placeholder_screenshot.png' %}" data-original="{{ item.fanart_url }}">
+		                    	{% else %}
+			                    	<img src="{% static 'imgs/placeholder_poster.png' %}" data-original="{{ item.poster_url }}">
+		                    	{% endif %}
+		                    </div>
+	                    {% endif %}
+	                    <div class="info-pane-text"><div class="text-wrapper">
+	                        <div class="info-pane-title">
+	                            {% with title=item.title.split articles="a an the" lowercase="a b c d e f g h i j k l m n o p q r s t u v w x y z" %}  
+									{% with first=title|first %}
+										{% if first.lower in articles.split %}
+											<span class="thin">{{ first }}</span>
+										{% else %}
+											{{ first }}
+										{% endif %}
+									{% endwith %}
+									{% for word in title|slice:"1:" %}
+										{% if word|slice:"1" in lowercase.split %}
+											<span class="thin">{{ word }}</span>
+										{% else %}
+											{{ word }}
+										{% endif %}
+									{% endfor %}
+								{% endwith %}
+	                        </div>
+	                        {% if item.released %}
+			                    <div class="info-pane-date">
+			                        <span class="thin">{{ item.released|date:"M" }}{{ item.released|date:"j" }}</span>{{ item.released|date:"Y" }}
+			                    </div>
+			                {% elif item.first_aired %}
+				                <div class="info-pane-date">
+			                        <span class="thin">{{ item.first_aired|date:"M" }}{{ item.first_aired|date:"j" }}</span>{{ item.first_aired|date:"Y" }}
+			                    </div>
+		                    {% endif %}
+	                        <div class="info-pane-overview">
+	                            {{ item.overview }}
+	                        </div>
+	                        <a href="{% url 'show_info_page' item.trakt_id %}" class="full-info"><span class="more">VIEW FULL INFO</span></a>
+	                    </div></div>
+	                </div>
+	            </div>
+			</div>
+		{% endfor %}
+	{% else %}
+		<div class="empty-backdrop">
+			<img src="{% static 'imgs/placeholder_poster.png' %}" style="display: none;">
+			<span class="backdrop-icon">{% include "converted_svg/shows.svg.html" %}</span>
+			<h1>You have no shows!</h1>
+			<span id="switch-help">{% include "converted_svg/switch_help.svg.html" %}</span>
+			<span id="search-help">{% include "converted_svg/search_help.svg.html" %}</span>
+		</div>
+
+	{% endif %}
+</div>
+{% endblock %}

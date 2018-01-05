@@ -1,0 +1,29 @@
+{% load staticfiles %}
+
+{% if cast and media_people.cast|length > 18 and forloop.counter == 12 %}
+<div class="col-xs-2 nopadding poster cast_hidden" url="{% url 'person_info_page' member.person.ids.trakt %}">
+{% elif crew and media_people.crew|length > 18 and forloop.counter == 12 %}
+<div class="col-xs-2 nopadding poster crew_hidden" url="{% url 'person_info_page' member.person.ids.trakt %}">
+{% else %}
+<div class="col-xs-2 nopadding poster" url="{% url 'person_info_page' member.person.ids.trakt %}">
+{% endif %}
+	<div class="placeholder" reg="0.13" sm="0.18">
+		<div>
+			{% include "converted_svg/person.svg.html" %}
+			<br><br>{{ member.person.name }}
+		</div>
+	</div>
+	<div class="template">
+	{% if member.person.images.headshot.medium %}
+		<div class="img-container">
+			<img class="lazy poster-img" src="{% static 'imgs/placeholder_poster.png' %}" data-original="{{ member.person.images.headshot.medium }}">
+		</div>
+	{% endif %}
+	</div>
+	<div class="overlay">
+		<div class="overlay-title" reg="0.10" sm="0.10">
+			{{ member.person.name }}
+		</div>
+	</div>
+	<div class="character">{{ title }}</div>
+</div>

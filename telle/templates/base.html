@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+        {% block title %}
+        <title>tell-e | Track and manage your favorite movies and shows!</title>
+        {% endblock %}
+
+        {% load staticfiles %}
+        <!-- jQuery (necessary for some plugins) -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+        <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+        <script src="{% static 'js/modernizr.js' %}"></script>
+
+        <!-- CSS -->
+        <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+        <link href="{% static 'css/keyframes.min.css' %}" rel="stylesheet">
+        <link href="{% static 'css/style.css' %}" rel="stylesheet">
+
+        <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+          <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+          <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+        <!-- Fonts -->
+        <link href='https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz:400,200,700' rel='stylesheet' type='text/css'>
+        <link href='https://fonts.googleapis.com/css?family=Lato:400,100' rel='stylesheet' type='text/css'>
+
+        <!-- Favicon Set -->
+        <link rel="apple-touch-icon" sizes="57x57" href="{% static 'favicon.ico/apple-icon-57x57.png' %}">
+        <link rel="apple-touch-icon" sizes="60x60" href="{% static 'favicon.ico/apple-icon-60x60.png' %}">
+        <link rel="apple-touch-icon" sizes="72x72" href="{% static 'favicon.ico/apple-icon-72x72.png' %}">
+        <link rel="apple-touch-icon" sizes="76x76" href="{% static 'favicon.ico/apple-icon-76x76.png' %}">
+        <link rel="apple-touch-icon" sizes="114x114" href="{% static 'favicon.ico/apple-icon-114x114.png' %}">
+        <link rel="apple-touch-icon" sizes="120x120" href="{% static 'favicon.ico/apple-icon-120x120.png' %}">
+        <link rel="apple-touch-icon" sizes="144x144" href="{% static 'favicon.ico/apple-icon-144x144.png' %}">
+        <link rel="apple-touch-icon" sizes="152x152" href="{% static 'favicon.ico/apple-icon-152x152.png' %}">
+        <link rel="apple-touch-icon" sizes="180x180" href="{% static 'favicon.ico/apple-icon-180x180.png' %}">
+        <link rel="icon" type="image/png" sizes="192x192"  href="{% static 'favicon.ico/android-icon-192x192.png' %}">
+        <link rel="icon" type="image/png" sizes="32x32" href="{% static 'favicon.ico/favicon-32x32.png' %}">
+        <link rel="icon" type="image/png" sizes="96x96" href="{% static 'favicon.ico/favicon-96x96.png' %}">
+        <link rel="icon" type="image/png" sizes="16x16" href="{% static 'favicon.ico/favicon-16x16.png' %}">
+        <link rel="manifest" href="{% static 'favicon.ico/manifest.json' %}">
+        <meta name="msapplication-TileColor" content="#ffffff">
+        <meta name="msapplication-TileImage" content="{% static 'favicon.ico/ms-icon-144x144.png' %}">
+        <meta name="theme-color" content="#ffffff">
+
+    </head>
+    <body>
+	    <!-- Splash Screen -->
+		<div class="ole">
+			<section id="jSplash" >
+				<div id="circle"></div>
+			</section>
+		</div>
+		<!-- END SPLASH SCREEN -->
+        <div class="blocker-overlay"></div>
+
+	<div class="m-scene" id="main">
+        <!-- Used to send AJAX posts -->
+        <input type="hidden" id="csrf" value="{{ csrf_token }}">
+        <input type="hidden" id="manage_list_url" value="{% url 'manage_list' %}">
+        <input type="hidden" id="master-filters" class="{% for list in lists %}{{ list.name }} {% endfor %}">
+        
+        <!-- Side Menu -->
+        <div class="sidebar">
+            <div class="menu-toggle" id="menu-toggle">
+                {% include "converted_svg/arrow.svg.html" %}
+            </div>
+            <div class="menu-content">
+
+                <a href="{% url 'home' %}" id="logo">
+                    {% include "converted_svg/logo.svg.html" %}
+                </a>
+
+                <!-- Search Form -->
+                <form class="menu-form" id="search-form" method="GET" action="{% url 'search' %}">
+                  <label>
+                      <button type="submit"></button>
+                      {% include "converted_svg/search.svg.html" %}
+                  </label>
+                  <input type="text" autocomplete="off" name="query" placeholder="Search titles or people">
+                </form>
+
+                <!-- Lists / Content -->
+                {% block sidebar_content %}
+                    <ul class="filters">
+                        <li class="filter" data-filter="*" reg=".205">
+                            {% include 'converted_svg/list_sort.html' with name="all" type="default" display_type="filter" %}
+                            <div class="filter-icon" id="filter-all-icon"></div>All
+                        </li>
+                        {% for filter in lists %}
+                            <div id="filter-{{ filter.name }}">
+                                <li class="filter" data-filter=".{{filter.name}}" reg=".05">
+                                    {% include 'converted_svg/list_sort.html' with name=filter.name type=filter.type display_type="filter" %}
+                                    <div class="filter-icon" id="filter-{{ filter.name }}-icon"></div>{{ filter.pretty_name|truncatechars:10 }}
+                                </li>
+                            </div>
+                        {% endfor %}
+                    </ul>
+                    {% block default_filter %}
+                    {% endblock %}
+
+                    <!-- List form -->
+                    <form class="menu-form" id="menu-list-form" method="POST" url="{% url 'add_list' %}">
+                      <label>
+                          <button type="submit"></button>
+                          {% include "converted_svg/add_minor.svg.html" %}
+                      </label>
+                      {% for field in list_form.visible_fields %}
+                      {{ field }}
+                      {% endfor %}
+                    </form>
+                {% endblock %}
+
+                <div class="menu-footer">
+                    <a class="no-smoothState" href="{% url 'logout' %}">Log Out</a>
+                    <div class="settings">
+                        {% include 'converted_svg/settings.svg.html' %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- END SIDE MENU -->
+
+        <!-- Top Menu -->
+        <div class="topbar">
+            <div class="switcher-content">
+                <a href="{% url 'movies' %}">
+                    <span class="switcher-button {% block movies_icon_state %}{% endblock %}" id="movies-icon">
+                        {% include "converted_svg/movies.svg.html" %}
+                    </span>
+                </a>
+                <a href="{% url 'shows' %}">
+                    <span class="switcher-button {% block shows_icon_state %}{% endblock %}" id="shows-icon">
+                        {% include "converted_svg/shows.svg.html" %}
+                    </span>
+                </a>
+                <span id="switcher-toggle">
+                    {% include "converted_svg/arrow.svg.html" %}
+                </span>
+            </div>
+        </div>
+        <!-- END MENU -->		
+
+        <section class="content">
+		{% block content %}
+		{% endblock %}
+        </section>
+
+        <!-- Info panel -->
+        <div class="info-pane">
+            
+        </div>
+
+        <!-- Popup for managing lists -->
+        <div class="popup list-popup draggable" trakt_id="" url="{% url 'manage_list' %}">
+            ADD TO LISTS
+            <ul class="lists">
+                {% for list in lists %}
+                    <li class="list_item">
+                        <form method="POST" class="manage-list-form" id="manage-{{ list.name }}">
+                            <input type="hidden" class="manage-name" name="name" value="{{ list.name }}">
+                            <input type="checkbox" class="selection" id="list-{{ list.name }}-check">
+                            <label>
+                                <div id="list-{{ list.name }}">
+                                    {% include 'converted_svg/list_sort.html' with name=list.name type=list.type display_type="popup" %}
+                                    <div class="list-icon" id="list-{{ list.name }}-icon"></div>{{ list.pretty_name }}
+                                </div>
+                            </label>
+                        </form>
+                    </li>
+                {% endfor %}
+            </ul>
+            <form class="popup-add" id="popup-list-form" method="POST" url="{% url 'add_list' %}">
+                <label>
+                    <button type="submit"></button>
+                    {% include "converted_svg/add_minor.svg.html" %}
+                </label>
+                {% for field in list_form.visible_fields %}
+                    {{ field }}
+                {% endfor %}
+            </form>
+            <div class="popup-buttons" id="popup-remove-button" onclick="remove_media_popup()" url="{% url 'remove_media' %}">remove</div>
+            <div class="popup-buttons" onclick="fadeOutListPopup()">close</div>
+        </div>
+
+        <!-- Popup for settings -->
+        {% include 'settings.html' %}
+
+        <script src="{% static 'js/main.js' %}"></script>
+        <script src="{% static 'js/interact.js' %}"></script>
+    </div>
+	    <script src="{% static 'js/lazyloader.js' %}"></script>
+        <script src="{% static 'js/isotope.pkgd.min.js' %}"></script>
+        <script src="{% static 'js/smoothState.js' %}"></script>
+        <script src="{% static 'js/bootstrap.min.js' %}"></script>
+        <script src="{% static 'js/jpreloader.js' %}"></script>
+        <script src="{% static 'js/vague.js' %}"></script>
+    </body>
+</html>

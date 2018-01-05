@@ -1,0 +1,64 @@
+{% load staticfiles %}
+
+<div class="col-xs-2 nopadding poster filter-item {{ type }}" trakt_id={{item.ids.trakt}} type="{{ item.type }}">
+	<div class="placeholder" reg="0.13" sm="0.18">
+		<div>
+			{% if item.type == "person" %}
+				{% include "converted_svg/person.svg.html" %}
+				<br><br>{{ item.name }}
+			{% else %}
+				{% include "converted_svg/film.svg.html" %}
+				<br><br>{{ item.title }}
+			{% endif %}
+		</div>
+	</div>
+	<div class="template"></div>
+	{% if type != "person" and item.images.poster.medium %}
+		<div class="img-container">
+			<img class="lazy poster-img" src="{% static 'imgs/placeholder_poster.png' %}" data-original="{{ item.images.poster.medium }}">
+		</div>
+	{% elif item.images.headshot.medium %}
+		<div class="img-container">
+			<img class="lazy poster-img" src="{% static 'imgs/placeholder_poster.png' %}" data-original="{{ item.images.headshot.medium }}">
+		</div>
+	{% endif %}
+	<div class="overlay info-pane-toggle" data="{{ item.images.fanart.medium }}">
+		<div class="overlay-title" reg="0.13" sm="0.18">
+			{% if item.type == "person" %}
+				{{ item.name }}
+			{% else %}
+				{{ item.year }}
+			{% endif %}
+		</div>
+		{% if item.type != "person" %}
+			<span class="overlay-sub sub-left" id="add">
+				<form method="POST" class="add-media-form" url="{% url 'add_media' %}" id="search-add-{{ item.ids.trakt }}" {% if item.owns %}style="display: none;"{% endif %}>
+					 <input type="hidden" name="media-id" value="{{ item.ids.trakt }}">
+					 <input type="hidden" name="media-type" value="{{ item.type }}">
+	 				 {% csrf_token %}
+					 <label>
+						 <button type="submit"></button>
+						 {% include "converted_svg/add.svg.html" %}
+					 </label>
+			    </form>
+			    <form method="POST" class="remove-media-form" url="{% url 'remove_media' %}" id="search-remove-{{ item.ids.trakt }}" {% if not item.owns %}style="display: none;"{% endif %}>
+					 <input type="hidden" name="media-id" value="{{ item.ids.trakt }}">
+	 				 {% csrf_token %}
+					 <label>
+						 <button type="submit"></button>
+						 {% include "converted_svg/add_selected.svg.html" %}
+					 </label>
+			    </form>
+			</span>
+			{% ifequal item.type "movie" %}
+			<a href="{% url 'movie_info_page' item.ids.trakt %}" class="full-info">
+			{% else %}
+			<a href="{% url 'show_info_page' item.ids.trakt %}" class="full-info">
+			{% endifequal %}
+				<span class="overlay-sub sub-right" id="info">
+					{% include "converted_svg/info.svg.html" %}
+				</span>
+			</a>
+		{% endif %}
+	</div>
+</div>

@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block sidebar_content %}
+{% endblock %}
+
+{% block title %}
+    <title>{{ person_info.name }} | tell-e</title>
+{% endblock %}
+
+{% block content %}
+<img src="{% static 'imgs/placeholder_poster.png' %}" style="display: none;">
+<link href='https://fonts.googleapis.com/css?family=Roboto+Slab:300' rel='stylesheet' type='text/css'>
+<link href="{% static 'css/infopage.css' %}" rel="stylesheet">
+<div class="info-page scene_element scene_element--fadeinup">
+	<div class="info-page-bg">
+		{% if person_info.images.fanart.thumb %}
+			<img class="lazy" src="{% static 'imgs/placeholder_fanart.png' %}" data-original="{{ person_info.images.fanart.thumb }}">
+		{% else %}
+			<img class="lazy" src="{% static 'imgs/placeholder_fanart' %}" data-original="{% static 'imgs/info-bg.jpg' %}">
+		{% endif %}
+	</div>
+	<div class="row header-row">
+		<div class="header-content">
+            <div class="info-page-content">
+                <div class="info-page-img">
+                	{% if person_info.images.headshot.medium %}
+                        <img class="lazy" src="{% static 'imgs/placeholder_poster.png' %}" data-original="{{ person_info.images.headshot.medium }}">
+                    {% else %}
+                    	<style>
+                    		.info-page-content {text-align: center;}
+                    		.info-page-img {display: none;}
+                    		.info-page .header-row {padding-right: 0;}
+                    		.header-content .extras {margin-right: 0;}
+                    	</style>
+                    {% endif %}
+                </div>
+                <div class="info-page-text"><div class="text-wrapper">
+                    <div class="info-page-title">
+                        {{ person_info.name }}
+                    </div>
+                	{% if person_info.birthday and person_info.birthday != "None" %}
+	                    <div class="info-page-date">
+	                        <span class="thin">{{ person_info.birthday|date:"M" }}{{ person_info.birthday|date:"j" }}</span>{{ person_info.birthday|date:"Y" }} 
+	                        {% if person_info.death and person_info.death != "None" %}
+	                        - <span class="thin">{{ person_info.death|date:"M" }}{{ person_info.death|date:"j" }}</span>{{ person_info.death|date:"Y" }}
+	                        {% endif %}
+	                    </div>
+                    {% endif %}
+                    <div class="extras">
+                    	{% if person_info.birthplace and person_info.birthplace != "None" %}
+	                    	<span class="tidbit"><span class="thin">from</span> {{ person_info.birthplace }}</span>
+                    	{% endif %}
+                    	{% if person_info.ids.imdb or person_info.homepage %}
+                    	<span class="tidbit">
+	                		{% if person_info.ids.imdb %}
+		                    	<a href="http://www.imdb.com/name/{{ person_info.ids.imdb }}" target="_blank">
+			                    	<span class="rating">IMDb</span>
+		                    	</a>
+	                    	{% endif %}
+	                    	{% if person_info.homepage %}
+		                    	<a href="{{ person_info.homepage }}" target="_blank">
+			                    	<span class="rating">WEB</span>
+		                    	</a>
+	                    	{% endif %}
+                    	</span>
+                    	{% endif %}
+                    </div>
+                </div></div>
+            </div>
+        </div>
+	</div>
+
+	{% if person_info.biography %}
+	<div class="row">
+		<div class="col-xs-2">
+		</div>
+		<div class="col-xs-8">
+			<hr>
+		</div>
+		<div class="col-xs-2">
+		</div>
+	</div>
+
+	<div class="row content-main">
+		<div class="col-xs-12 bio">
+			{{ person_info.biography }}
+		</div>
+	</div>
+	{% endif %}
+
+	<div class="row">
+		<div class="col-xs-2">
+		</div>
+		<div class="col-xs-8">
+			<hr>
+		</div>
+		<div class="col-xs-2">
+		</div>
+	</div>
+
+	<div class="row content-main">
+	    <h1 class="lato">Known For</h1>
+		<div class="row nopadding">
+			<div class="link-row">
+				{% for media in person_movies %}
+					{% include 'poster_info_media.html' with movie=True %}
+				{% endfor %}
+				{% for media in person_shows %}
+					{% include 'poster_info_media.html' with show=True %}
+				{% endfor %}
+			</div>
+		</div>
+    </div>
+
+    <div class="row">
+		<div class="col-xs-2">
+		</div>
+		<div class="col-xs-8">
+			<hr>
+		</div>
+		<div class="col-xs-2">
+		</div>
+	</div>
+
+	<div class="row content-main">
+		<div class="col-xs-2">
+		</div>
+		<div class="col-xs-8 technical-section">
+			something else? not sure what
+		</div>
+		<div class="col-xs-2">
+		</div>
+	</div>
+
+	<div class="row" style="height: 100px">
+		&nbsp;
+	</div>
+
+</div>
+
+<a class="full-info" id="info-link">&nbsp;</a>
+
+<script src="{% static 'js/info_page.js' %}"></script>
+{% endblock %}

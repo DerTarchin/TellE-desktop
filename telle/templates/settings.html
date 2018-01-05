@@ -1,0 +1,415 @@
+{% load staticfiles %}
+<div class="popup settings-popup">
+    SETTINGS
+    <form method="POST" action="{% url 'update_settings' %}" class="settings-form">
+        {% csrf_token %}
+        <section>
+            <span class="title">LAYOUT</span>
+            <div>
+                <span class="switch-title">MOVIES</span>
+                <div class="switch">                    
+                    <input type="radio" class="switch-input" name="movie_view_mode" value="poster" id="settings-movie-view_mode-poster" {% if user.settings.movie_view_mode == "poster" %} checked{% endif %}>
+                    <label for="settings-movie-view_mode-poster" class="switch-label switch-label-off">Poster</label>
+                    <input type="radio" class="switch-input" name="movie_view_mode" value="fanart" id="settings-movie-view_mode-fanart" {% if user.settings.movie_view_mode == "fanart" %} checked{% endif %}>
+                    <label for="settings-movie-view_mode-fanart" class="switch-label switch-label-on">Banner</label>
+                    <span class="switch-selection"></span>
+                </div> 
+            </div>
+            <div>
+                <span class="switch-title">SHOWS</span>
+                <div class="switch">
+                    <input type="radio" class="switch-input" name="show_view_mode" value="poster" id="settings-show-view_mode-poster" {% if user.settings.show_view_mode == "poster" %} checked{% endif %}>
+                    <label for="settings-show-view_mode-poster" class="switch-label switch-label-off">Poster</label>
+                    <input type="radio" class="switch-input" name="show_view_mode" value="fanart" id="settings-show-view_mode-fanart" {% if user.settings.show_view_mode == "fanart" %} checked{% endif %}>
+                    <label for="settings-show-view_mode-fanart" class="switch-label switch-label-on">Banner</label>
+                    <span class="switch-selection"></span>
+                </div>
+            </div>
+            <div>
+                <span class="switch-title">SEARCH</span>
+                <div class="switch">
+                    <input type="radio" class="switch-input" name="search_view_mode" value="poster" id="settings-search-view_mode-poster" {% if user.settings.search_view_mode == "poster" %} checked{% endif %}>
+                    <label for="settings-search-view_mode-poster" class="switch-label switch-label-off">Poster</label>
+                    <input type="radio" class="switch-input" name="search_view_mode" value="fanart" id="settings-search-view_mode-fanart" {% if user.settings.search_view_mode == "fanart" %} checked{% endif %}>
+                    <label for="settings-search-view_mode-fanart" class="switch-label switch-label-on">Banner</label>
+                    <span class="switch-selection"></span>
+                </div>
+            </div>
+        </section>
+        <section>
+            <span class="title">SORT BY</span>
+            <div>
+                <span class="switch-title">MOVIES</span>
+                <div class="switch">
+                    <fieldset class="radio-container">
+                        <div class="radio-options">
+                            <div class="toggle">Choose a method</div>
+                            <ul>
+                                <li>
+                                    <input type="radio" name="movie_sort_style" id="settings-movie-date_added" value="date_added" {% if user.settings.movie_sort_style == "date_added" %} checked{% endif %}>
+                                    <label for="settings-movie-date_added">Date Added</label>
+                                </li>
+                                <li>
+                                    <input type="radio" name="movie_sort_style" id="settings-movie-release_date" value="release_date" {% if user.settings.movie_sort_style == "release_date" %} checked{% endif %}>
+                                    <label for="settings-movie-release_date">Release Date</label>
+                                </li>
+                                <li>
+                                    <input type="radio" name="movie_sort_style" id="settings-movie-alphabetical" value="alphabetical" {% if user.settings.movie_sort_style == "alphabetical" %} checked{% endif %}>
+                                    <label for="settings-movie-alphabetical">Alphabetical</label>
+                                </li>
+                            </ul>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+            <div>
+                <span class="switch-title">SHOWS</span>
+                <div class="switch">
+                    <fieldset class="radio-container">
+                        <div class="radio-options">
+                            <div class="toggle">Choose a method</div>
+                            <ul>
+                                <li>
+                                    <input type="radio" name="show_sort_style" id="settings-show-date_added" value="date_added" {% if user.settings.show_sort_style == "date_added" %} checked{% endif %}>
+                                    <label for="settings-show-date_added">Date Added</label>
+                                </li>
+                                <li>
+                                    <input type="radio" name="show_sort_style" id="settings-show-latest_episode" value="latest_episode" {% if user.settings.show_sort_style == "latest_episode" %} checked{% endif %}>
+                                    <label for="settings-show-latest_episode">Latest Episode</label>
+                                </li>
+                                <li>
+                                    <input type="radio" name="show_sort_style" id="settings-show-alphabetical" value="alphabetical" {% if user.settings.show_sort_style == "alphabetical" %} checked{% endif %}>
+                                    <label for="settings-show-alphabetical">Alphabetical</label>
+                                </li>
+                            </ul>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+            <div>
+                <span class="switch-title">SEARCH</span>
+                <div class="switch">
+                    <fieldset class="radio-container">
+                        <div class="radio-options">
+                            <div class="toggle">Choose a method</div>
+                            <ul>
+                                <li>
+                                    <input type="radio" name="search_sort_style" id="settings-search-relevancy" value="relevancy" {% if user.settings.search_sort_style == "relevancy" %} checked{% endif %}>
+                                    <label for="settings-search-relevancy">Most Relevant</label>
+                                </li>
+                                <li>
+                                    <input type="radio" name="search_sort_style" id="settings-search-release_date" value="release_date" {% if user.settings.search_sort_style == "release_date" %} checked{% endif %}>
+                                    <label for="settings-search-release_date">Release Date</label>
+                                </li>
+                                <li>
+                                    <input type="radio" name="search_sort_style" id="settings-search-alphabetical" value="alphabetical" {% if user.settings.search_sort_style == "alphabetical" %} checked{% endif %}>
+                                    <label for="settings-search-alphabetical">Alphabetical</label>
+                                </li>
+                            </ul>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+        </section>
+        <section>
+            <span class="title">LIST VIEW</span>
+            <div>
+                <span class="switch-title">MOVIES</span>
+                <div class="switch">
+                    <fieldset class="radio-container">
+                        <div class="radio-options">
+                            <div class="toggle">Choose a list</div>
+                            <ul id="default-movie-list-selection">
+                                <li>
+                                    <input type="radio" name="movie_default_filter" id="settings-movie-all" value="all" {% if user.settings.movie_default_filter == "all" %} checked{% endif %}>
+                                    <label for="settings-movie-all">All</label>
+                                </li>
+                                <li>
+                                    <input type="radio" name="movie_default_filter" id="settings-movie-favorites" value="favorites" {% if user.settings.movie_default_filter == "favorites" %} checked{% endif %}>
+                                    <label for="settings-movie-favorites">Favorites</label>
+                                </li>
+                                <li>
+                                    <input type="radio" name="movie_default_filter" id="settings-movie-to-watch" value="to-watch" {% if user.settings.movie_default_filter == "to-watch" %} checked{% endif %}>
+                                    <label for="settings-movie-to-watch">To Watch</label>
+                                </li>
+                                <li>
+                                    <input type="radio" name="movie_default_filter" id="settings-movie-watched" value="watched" {% if user.settings.movie_default_filter == "watched" %} checked{% endif %}>
+                                    <label for="settings-movie-watched">Watched</label>
+                                </li>
+                                {% for list in lists %}
+                                    {% if list.type != "default" %}
+                                        <li>
+                                            <input type="radio" name="movie_default_filter" id="settings-movie-{{ list.name }}" value="{{ list.name }}" {% if user.settings.movie_default_filter == "{{ list.name }}" %} checked{% endif %}>
+                                            <label for="settings-movie-{{ list.name }}">{{ list.pretty_name }}</label>
+                                        </li>
+                                    {% endif %}
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+            <div>
+                <span class="switch-title">SHOWS</span>
+                <div class="switch">
+                    <fieldset class="radio-container">
+                        <div class="radio-options">
+                            <div class="toggle">Choose a list</div>
+                            <ul id="default-show-list-selection">
+                                <li>
+                                    <input type="radio" name="show_default_filter" id="settings-show-all" value="all" {% if user.settings.show_default_filter == "all" %} checked{% endif %}>
+                                    <label for="settings-show-all">All</label>
+                                </li>
+                                <li>
+                                    <input type="radio" name="show_default_filter" id="settings-show-favorites" value="favorites" {% if user.settings.show_default_filter == "favorites" %} checked{% endif %}>
+                                    <label for="settings-show-favorites">Favorites</label>
+                                </li>
+                                <li>
+                                    <input type="radio" name="show_default_filter" id="settings-show-to-watch" value="to-watch" {% if user.settings.show_default_filter == "to-watch" %} checked{% endif %}>
+                                    <label for="settings-show-to-watch">To Watch</label>
+                                </li>
+                                <li>
+                                    <input type="radio" name="show_default_filter" id="settings-show-watching" value="watching" {% if user.settings.show_default_filter == "watching" %} checked{% endif %}>
+                                    <label for="settings-show-watching">Watching</label>
+                                </li>
+                                <li>
+                                    <input type="radio" name="show_default_filter" id="settings-show-watched" value="watched" {% if user.settings.show_default_filter == "watched" %} checked{% endif %}>
+                                    <label for="settings-show-watched">Watched</label>
+                                </li>
+                                {% for list in lists %}
+                                    {% if list.type != "default" %}
+                                        <li>
+                                            <input type="radio" name="show_default_filter" id="settings-show-{{ list.name }}" value="{{ list.name }}" {% if user.settings.show_default_filter == "{{ list.name }}" %} checked{% endif %}>
+                                            <label for="settings-show-{{ list.name }}">{{ list.pretty_name }}</label>
+                                        </li>
+                                    {% endif %}
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+            <div>
+                <span class="switch-title">SEARCH</span>
+                <div class="switch">
+                    <fieldset class="radio-container">
+                        <div class="radio-options">
+                            <div class="toggle">Choose a filter</div>
+                            <ul>
+                                <li>
+                                    <input type="radio" name="search_default_filter" id="settings-search-all" value="all" {% if user.settings.search_default_filter == "all" %} checked{% endif %}>
+                                    <label for="settings-search-all">All</label>
+                                </li>
+                                <li>
+                                    <input type="radio" name="search_default_filter" id="settings-search-movies" value="movies" {% if user.settings.search_default_filter == "movies" %} checked{% endif %}>
+                                    <label for="settings-search-movies">Movies</label>
+                                </li>
+                                <li>
+                                    <input type="radio" name="search_default_filter" id="settings-search-shows" value="shows" {% if user.settings.search_default_filter == "shows" %} checked{% endif %}>
+                                    <label for="settings-search-shows">Shows</label>
+                                </li>
+                                <li>
+                                    <input type="radio" name="search_default_filter" id="settings-search-people" value="people" {% if user.settings.search_default_filter == "people" %} checked{% endif %}>
+                                    <label for="settings-search-people">People</label>
+                                </li>
+                            </ul>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+        </section>
+        <span class="break-inline"></span>
+        <section>
+            <span class="title">MANAGE LISTS</span>
+            <div>
+                <span class="switch-title">LIST</span>
+                <div class="switch">
+                    <fieldset class="radio-container">
+                        <div class="radio-options">
+                            <div class="toggle">Choose a list</div>
+                            <ul id="manage-custom-list-selection">
+                                {% for list in lists %}
+                                    {% if list.type != "default" %}
+                                        <li>
+                                            <input type="radio" name="manage_list" id="settings-list-{{ list.name }}" value="{{ list.name }}" {% if user.settings.>
+                                            <label for="settings-list-{{ list.name }}">{{ list.pretty_name }}</label>
+                                        </li>
+                                    {% endif %}
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+            <div>
+                <span class="switch-title">RULE</span>
+                <div class="switch">
+                    <fieldset class="radio-container">
+                        <div class="radio-options">
+                            <!-- TODO: Implement checks -->
+                            <div class="toggle">Choose a rule</div>
+                            <ul>
+                                <li>
+                                    <input type="radio" name="rule" id="settings-rule-before_date" value="before_date">
+                                    <label for="settings-rule-before_date">Before Date</label>
+                                </li>
+                                <li>
+                                    <input type="radio" name="rule" id="settings-rule-after_date" value="after_date">
+                                    <label for="settings-rule-after_date">After Date</label>
+                                </li>
+                                <li>
+                                    <input type="radio" name="rule" id="settings-rule-between_dates" value="between_dates">
+                                    <label for="settings-rule-between_dates">Between Dates</label>
+                                </li>
+                                <li>
+                                    <input type="radio" name="rule" id="settings-rule-genre" value="genre">
+                                    <label for="settings-rule-genre">Genre</label>
+                                </li>
+                                <li>
+                                    <input type="radio" name="rule" id="settings-rule-cast_member" value="cast_member">
+                                    <label for="settings-rule-cast_member">Cast Member</label>
+                                </li>
+                            </ul>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+            <div>
+                <span class="switch-title">[PARAM]</span>
+                <div class="switch">
+                    <span style="font-size: 20px;position:relative; top: -10px;margin-left: 20px">
+                    #TODO add input
+                    </span>
+                </div>
+            </div>
+            <div>
+                <div class="popup-buttons small" url="{% url 'delete_list' %}" onclick="delete_list()" id="delete_list">delete list</div>
+                <div class="popup-buttons small">apply</div>
+            </div>
+        </section>
+        <section>
+            <span class="title">NOTIFICATIONS</span>
+            <div>
+                <span class="switch-title">MOVIES</span>
+                <div class="switch">
+                    <fieldset class="radio-container">
+                        <div class="radio-options">
+                            <div class="toggle">Choose a time</div>
+                            <ul>
+                                <li>
+                                    <input type="radio" name="movie_alert_period" id="settings-movie-week_before" value="week_before" {% if user.settings.movie_alert_period == "week_before" %} checked{% endif %}>
+                                    <label for="settings-movie-week_before">1 Week Before</label>
+                                </li>
+                                <li>
+                                    <input type="radio" name="movie_alert_period" id="settings-movie-day_before" value="day_before" {% if user.settings.movie_alert_period == "day_before" %} checked{% endif %}>
+                                    <label for="settings-movie-day_before">1 Day Before</label>
+                                </li>
+                                <li>
+                                    <input type="radio" name="movie_alert_period" id="settings-movie-day_of" value="day_of" {% if user.settings.movie_alert_period == "day_of" %} checked{% endif %}>
+                                    <label for="settings-movie-day_of">Release Day</label>
+                                </li>
+                                <li>
+                                    <input type="radio" name="movie_alert_period" id="settings-movie-day_after" value="day_after" {% if user.settings.movie_alert_period == "day_after" %} checked{% endif %}>
+                                    <label for="settings-movie-day_after">1 Day After</label>
+                                </li>
+                                <li>
+                                    <input type="radio" name="movie_alert_period" id="settings-movie-week_after" value="week_after" {% if user.settings.movie_alert_period == "week_after" %} checked{% endif %}>
+                                    <label for="settings-movie-week_after">1 Week After</label>
+                                </li>
+                            </ul>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+            <div>
+                <span class="switch-title">SHOWS</span>
+                <div class="switch">
+                    <fieldset class="radio-container">
+                        <div class="radio-options">
+                            <div class="toggle">Choose a time</div>
+                            <ul>
+                                <li>
+                                    <input type="radio" name="show_alert_period" id="settings-show-week_before" value="week_before" {% if user.settings.show_alert_period == "week_before" %} checked{% endif %}>
+                                    <label for="settings-show-week_before">1 Week Before</label>
+                                </li>
+                                <li>
+                                    <input type="radio" name="show_alert_period" id="settings-show-day_before" value="day_before" {% if user.settings.show_alert_period == "day_before" %} checked{% endif %}>
+                                    <label for="settings-show-day_before">1 Day Before</label>
+                                </li>
+                                <li>
+                                    <input type="radio" name="show_alert_period" id="settings-show-hour_before" value="hour_before" {% if user.settings.show_alert_period == "hour_before" %} checked{% endif %}>
+                                    <label for="settings-show-hour_before">1 Hour Before</label>
+                                </li>
+                                <li>
+                                    <input type="radio" name="show_alert_period" id="settings-show-15_before" value="15_before" {% if user.settings.show_alert_period == "15_before" %} checked{% endif %}>
+                                    <label for="settings-show-15_before">15 Min Before</label>
+                                </li>
+                                <li>
+                                    <input type="radio" name="show_alert_period" id="settings-show-15_after" value="15_after" {% if user.settings.show_alert_period == "15_after" %} checked{% endif %}>
+                                    <label for="settings-show-15_after">15 Min After</label>
+                                </li>
+                                <li>
+                                    <input type="radio" name="show_alert_period" id="settings-show-hour_after" value="hour_after" {% if user.settings.show_alert_period == "hour_after" %} checked{% endif %}>
+                                    <label for="settings-show-hour_after">1 Hour After</label>
+                                </li>
+                                <li>
+                                    <input type="radio" name="show_alert_period" id="settings-show-day_after" value="day_after" {% if user.settings.show_alert_period == "day_after" %} checked{% endif %}>
+                                    <label for="settings-show-day_after">1 Day After</label>
+                                </li>
+                                <li>
+                                    <input type="radio" name="show_alert_period" id="settings-show-week_after" value="week_after" {% if user.settings.show_alert_period == "week_after" %} checked{% endif %}>
+                                    <label for="settings-show-week_after">1 Week After</label>
+                                </li>
+                            </ul>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+            <div>
+                <span class="switch-title">EMAIL</span>
+                <div class="switch">
+                    <input type="radio" class="switch-input" name="email_notification" value="true" id="settings-alert-email_true" {% if user.settings.email_notification == "true" %} checked{% endif %}>
+                    <label for="settings-alert-email_true" class="switch-label switch-label-off">Yes</label>
+                    <input type="radio" class="switch-input" name="email_notification" value="false" id="settings-alert-email_false" {% if user.settings.email_notification == "false" %} checked{% endif %}>
+                    <label for="settings-alert-email_false" class="switch-label switch-label-on">No</label>
+                    <span class="switch-selection"></span>
+                </div> 
+            </div>
+        </section>
+        <section>
+            <span class="title">ACCOUNT</span>
+            <div>
+                <span class="switch-title">NAME</span>
+                <div class="switch">
+                    <span style="font-size: 20px;position:relative; top: -10px;margin-left: 20px">
+                    #TODO add input
+                    </span>
+                </div>
+            </div>
+            <div>
+                <span class="switch-title">EMAIL</span>
+                <div class="switch">
+                    <span style="font-size: 20px;position:relative; top: -10px;margin-left: 20px">
+                    #TODO add input
+                    </span>
+                </div>
+            </div>
+            <div>
+                <span class="switch-title">HOME</span>
+                <div class="switch">
+                    <input type="radio" class="switch-input" name="home_page" value="movies" id="settings-homepage-movies" {% if user.settings.home_page == "movies" %} checked{% endif %}>
+                    <label for="settings-homepage-movies" class="switch-label switch-label-off">Movies</label>
+                    <input type="radio" class="switch-input" name="home_page" value="shows" id="settings-homepage-shows" {% if user.settings.home_page == "shows" %} checked{% endif %}>
+                    <label for="settings-homepage-shows" class="switch-label switch-label-on">Shows</label>
+                    <span class="switch-selection"></span>
+                </div> 
+            </div>
+            <div>
+                <a class="no-smoothState" href="{% url 'delete_account' %}" onclick="return confirm('You are about to delete your account. You cannot undo this action.');">
+			        <div class="popup-buttons small red">delete account</div>
+                </a>
+            </div>
+        </section>
+    </form>
+    <div class="popup-buttons" onclick="update_settings()">update settings</div>
+</div>

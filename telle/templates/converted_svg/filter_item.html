@@ -1,0 +1,10 @@
+<style>
+#filter-{{ name }}-icon {
+	-webkit-mask-image: url('data:image/svg+xml;utf8,{{ data }}');
+	mask-image: url('data:image/svg+xml;utf8,{{ data }}');
+}
+.sidebar .menu-content li.active #filter-{{ name }}-icon {
+	-webkit-mask-image: url('data:image/svg+xml;utf8,{{ data_selected }}');
+	mask-image: url('data:image/svg+xml;utf8,{{ data_selected }}');
+}
+</style>

@@ -1,0 +1,35 @@
+{% load staticfiles %}
+<div class="col-xs-2 nopadding poster filter-item {% for filter in item.list_set.all %}{{ filter.name }} {% endfor %}" trakt_id="{{ item.trakt_id }}">
+	<div class="placeholder" reg="0.13" sm="0.18">
+		<div>
+			{% include "converted_svg/film.svg.html" %}
+			<br><br>{{ item.title }}
+		</div>
+	</div>
+	<div class="template"></div>
+	{% if item.poster_url %}
+		<div class="img-container">
+			<img class="lazy poster-img" src="{% static 'imgs/placeholder_poster.png' %}" data-original="{{ item.poster_url }}">
+		</div>
+	{% endif %}
+	<div class="overlay info-pane-toggle">
+		<div class="overlay-title" reg="0.13" sm="0.18">
+			{% if item.released %}
+				<span class="break"><span class="thin">{{ item.released|date:"M" }}</span>{{ item.released|date:"j" }}</span><span class="break thin">{{ item.released|date:"Y" }}</span>
+			{% elif item.first_aired %}
+				<span class="break"><span class="thin">{{ item.first_aired|date:"M" }}</span>{{ item.first_aired|date:"j" }}</span><span class="break thin">{{ item.first_aired|date:"Y" }}</span>
+			{% endif %}
+		</div>
+		<span class="overlay-sub sub-left" id="check" onclick='{% if type == "movie" %}mark_watched_movie({{item.trakt_id}});{% else %}alert("show");{% endif %}'> 
+			<span id="to-watch-item-icon" {% for filter in item.list_set.all %}{% if "to-watch" == filter.name or "watching" == filter.name %}style="display: block"{% endif %}{% endfor %}>
+				{% include "converted_svg/check.svg.html" %}
+			</span> 
+			<span id="watched-item-icon" {% for filter in item.list_set.all %}{% if "watched" == filter.name %}style="display: block"{% endif %}{% endfor %}>
+				{% include "converted_svg/check_selected.svg.html" %}
+			</span>
+		</span>
+		<span class="overlay-sub sub-right" id="options" trakt_id="{{ item.trakt_id }}">
+			{% include "converted_svg/options.svg.html" %}
+		</span>
+	</div>
+</div>

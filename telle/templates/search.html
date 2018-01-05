@@ -1,0 +1,185 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block title %}
+<title>tell-e | search</title>
+{% endblock %}
+
+{% block sidebar_content %}
+<ul class="filters">
+    <li class="filter" data-filter="*" reg=".205">
+        {% include 'converted_svg/list_sort.html' with name="all" type="search" display_type="filter" %}
+        <div class="filter-icon" id="filter-all-icon"></div>All
+    </li>
+    <div id="filter-movies">
+        <li class="filter" data-filter=".movies" reg=".05">
+            {% include 'converted_svg/list_sort.html' with name="movies" type="search" display_type="filter" %}
+            <div class="filter-icon" id="filter-movies-icon"></div>MOVIES
+        </li>
+    </div>
+    <div id="filter-shows">
+        <li class="filter" data-filter=".shows" reg=".05">
+            {% include 'converted_svg/list_sort.html' with name="shows" type="search" display_type="filter" %}
+            <div class="filter-icon" id="filter-shows-icon"></div>SHOWS
+        </li>
+    </div>
+    <div id="filter-people">
+        <li class="filter" data-filter=".people" reg=".05">
+            {% include 'converted_svg/list_sort.html' with name="people" type="search" display_type="filter" %}
+            <div class="filter-icon" id="filter-people-icon"></div>PEOPLE
+        </li>
+    </div>
+</ul>
+{% endblock %}
+
+{% block default_filter %}
+<input type="hidden" id="master-default-filter" value="{{ user.settings.search_default_filter }}">
+<script type="text/javascript">
+  {% if user.settings.search_default_filter == "all" %}
+    $('.filter[data-filter="*"]').addClass('active');
+  {% else %}
+    $('.filter[data-filter=".{{ user.settings.search_default_filter }}"]').addClass('active');
+  {% endif %}
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="scene_element scene_element--fadeinup">
+
+{% if movies or tv_series or people %}
+  {% if movies %}
+  <div class="movies">
+    <h1 class="search-title movies">Movies</h1>
+
+    <div class="row nopadding grid">
+  	  {% for item in movies %}
+        <!-- item.title -->
+  	  	{% include 'poster_search.html' with type="movies" %}
+        <!-- content for info panel -->
+        <div class="info-for-panel" trakt_id="{{ item.ids.trakt }}">
+          <div class="background">
+            <img {% if item.images.fanart.medium %}src="{% static 'imgs/placeholder_fanart.png' %}" data-original="{{ item.images.fanart.medium }}"{% else %}style="display:none;"{% endif %}>
+          </div>
+            <div class="content">
+                <div class="info-pane-content">
+                  {% if item.images.poster.medium %}
+                      <div class="info-pane-img">
+                        {% if user.settings.search_view_mode == "poster" and item.images.fanart.medium %}
+                          <img src="{% static 'imgs/placeholder_screenshot.png' %}" data-original="{{ item.images.fanart.medium }}">
+                        {% else %}
+                          <img src="{% static 'imgs/placeholder_poster.png' %}" data-original="{{ item.images.poster.medium }}">
+                        {% endif %}
+                      </div>
+                    {% endif %}
+                    <div class="info-pane-text"><div class="text-wrapper">
+                        <div class="info-pane-title">
+                          {% with title=item.title.split articles="a an the" lowercase="a b c d e f g h i j k l m n o p q r s t u v w x y z" %}  
+                            {% with first=title|first %}
+                              {% if first.lower in articles.split %}
+                                <span class="thin">{{ first }}</span>
+                              {% else %}
+                                {{ first }}
+                              {% endif %}
+                            {% endwith %}
+                            {% for word in title|slice:"1:" %}
+                              {% if word|slice:"1" in lowercase.split %}
+                                <span class="thin">{{ word }}</span>
+                              {% else %}
+                                {{ word }}
+                              {% endif %}
+                            {% endfor %}
+                          {% endwith %}
+                        </div>
+                        <div class="info-pane-date">
+                            {{ item.year }}
+                        </div>
+                        <div class="info-pane-overview">
+                            {{ item.overview }}
+                        </div>
+                        <a href="{% url 'movie_info_page' item.ids.trakt %}" class="full-info"><span class="more">VIEW FULL INFO</span></a>
+                    </div></div>
+                </div>
+            </div>
+          </div>
+  	  {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+  {% if tv_series %}
+  <div class="shows">
+    <h1 class="search-title {% if movies %}space{% endif %} shows">TV Shows</h1>
+    <div class="row nopadding grid">
+  	  {% for item in tv_series %}
+  	  	{% include 'poster_search.html' with type="shows" %}
+        <!-- content for info panel -->
+        <div class="info-for-panel" trakt_id="{{ item.ids.trakt }}">
+          <div class="background">
+            <img {% if item.images.fanart.medium %}src="{% static 'imgs/placeholder_fanart.png' %}" data-original="{{ item.images.fanart.medium }}"{% else %}style="display:none;"{% endif %}>
+          </div>
+            <div class="content">
+                <div class="info-pane-content">
+                    {% if item.images.poster.medium %}
+                      <div class="info-pane-img">
+                        {% if user.settings.search_view_mode == "poster" and item.images.fanart.medium %}
+                          <img src="{% static 'imgs/placeholder_screenshot.png' %}" data-original="{{ item.images.fanart.medium }}">
+                        {% else %}
+                          <img src="{% static 'imgs/placeholder_poster.png' %}" data-original="{{ item.images.poster.medium }}">
+                        {% endif %}
+                      </div>
+                    {% endif %}
+                    <div class="info-pane-text"><div class="text-wrapper">
+                        <div class="info-pane-title">
+                          {% with title=item.title.split articles="a an the" lowercase="a b c d e f g h i j k l m n o p q r s t u v w x y z" %}  
+                            {% with first=title|first %}
+                              {% if first.lower in articles.split %}
+                                <span class="thin">{{ first }}</span>
+                              {% else %}
+                                {{ first }}
+                              {% endif %}
+                            {% endwith %}
+                            {% for word in title|slice:"1:" %}
+                              {% if word|slice:"1" in lowercase.split %}
+                                <span class="thin">{{ word }}</span>
+                              {% else %}
+                                {{ word }}
+                              {% endif %}
+                            {% endfor %}
+                          {% endwith %}
+                        </div>
+                        <div class="info-pane-date">
+                            {{ item.year }}
+                        </div>
+                        <div class="info-pane-overview">
+                            {{ item.overview }}
+                        </div>
+                        <a href="{% url 'show_info_page' item.ids.trakt %}" class="full-info"><span class="more">VIEW FULL INFO</span></a>
+                    </div></div>
+                </div>
+            </div>
+          </div>
+  	  {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+  {% if people %}
+  <div class="people">
+    <h1 class="search-title {% if movies or tv_series %}space{% endif %} people">People</h1>
+    <div class="row nopadding grid">
+  	  {% for item in people %}
+  	  	{% include 'poster_search.html' with type="people" %}
+  	  {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+{% else %}
+  <div class="empty-backdrop">
+    <img src="{% static 'imgs/placeholder_poster.png' %}" style="display: none;">
+    <span class="backdrop-icon">{% include "converted_svg/search.svg.html" %}</span>
+    <h1>No search results!</h1>
+  </div>
+{% endif %}
+
+ </div>
+{% endblock %}

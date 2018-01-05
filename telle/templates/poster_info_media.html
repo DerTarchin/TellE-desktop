@@ -1,0 +1,38 @@
+{% load staticfiles %}
+{% if movie %}
+<div class="col-xs-2 nopadding poster" url="{% url 'movie_info_page' media.movie.ids.trakt %}">
+{% elif show %}
+<div class="col-xs-2 nopadding poster" url="{% url 'show_info_page' media.show.ids.trakt %}">
+{% endif %}
+	<div class="placeholder" reg="0.13" sm="0.18">
+		<div>
+			{% include "converted_svg/film.svg.html" %}
+			<br><br>
+			{% if movie %}
+				{{ media.movie.title }}
+			{% elif show %}
+				{{ media.show.title }}
+			{% endif %}
+		</div>
+	</div>
+	<div class="template">
+	{% if movie and media.movie.images.poster.medium %}
+		<div class="img-container">
+			<img class="lazy poster-img" src="{% static 'imgs/placeholder_poster.png' %}" data-original="{{ media.movie.images.poster.medium }}">
+		</div>
+	{% elif show and media.show.images.poster.medium %}
+		<div class="img-container">
+			<img class="lazy poster-img" src="{% static 'imgs/placeholder_poster.png' %}" data-original="{{ media.show.images.poster.medium }}">
+		</div>
+	{% endif %}
+	</div>
+	<div class="overlay">
+		<div class="overlay-title" reg="0.10" sm="0.10">
+			{% if movie %}
+				{{ media.movie.title }}
+			{% elif show %}
+				{{ media.show.title }}
+			{% endif %}
+		</div>
+	</div>
+</div>

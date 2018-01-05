@@ -1,0 +1,214 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load smart_if %}
+
+{% block sidebar_content %}
+{% endblock %}
+
+{% block title %}
+    <title>{{ media_info.title }} | tell-e</title>
+{% endblock %}
+
+{% block content %}
+<img src="{% static 'imgs/placeholder_poster.png' %}" style="display: none;">
+<link href='https://fonts.googleapis.com/css?family=Roboto+Slab' rel='stylesheet' type='text/css'>
+<link href="{% static 'css/infopage.css' %}" rel="stylesheet">
+<div class="info-page scene_element scene_element--fadeinup">
+	<div class="info-page-bg">
+		{% if media_info.fanart_url %}
+			<img class="lazy" src="{% static 'imgs/placeholder_fanart.png' %}" data-original="{{ media_info.fanart_url }}">
+		{% else %}
+			<img class="lazy" src="{% static 'imgs/placeholder_fanart' %}" data-original="{% static 'imgs/info-bg.jpg' %}">
+		{% endif %}
+	</div>
+	<div class="row header-row">
+		<div class="header-content">
+            <div class="info-page-content">
+                <div class="info-page-img">
+                	{% if media_info.poster_url %}
+                        <img class="lazy" src="{% static 'imgs/placeholder_poster.png' %}" data-original="{{ media_info.poster_url }}">
+                    {% else %}
+                    	<style>
+                    		.info-page-content {text-align: center;}
+                    		.info-page-img {display: none;}
+                    		.info-page .header-row {padding-right: 0;}
+                    		.header-content .extras {margin-right: 0;}
+                    	</style>
+                    {% endif %}
+                </div>
+                <div class="info-page-text"><div class="text-wrapper">
+                    <div class="info-page-title">
+                        {% with title=media_info.title.split articles="a an the" lowercase="a b c d e f g h i j k l m n o p q r s t u v w x y z" %}  
+	                        {% with first=title|first %}
+	                          {% if first.lower in articles.split %}
+	                            <span class="thin">{{ first }}</span>
+	                          {% else %}
+	                            {{ first }}
+	                          {% endif %}
+	                        {% endwith %}
+	                        {% for word in title|slice:"1:" %}
+	                          {% if word|slice:"1" in lowercase.split %}
+	                            <span class="thin">{{ word }}</span>
+	                          {% else %}
+	                            {{ word }}
+	                          {% endif %}
+	                        {% endfor %}
+						{% endwith %}
+                    </div>
+                	{% if media_info.released and media_info.released != "None" %}
+	                    <div class="info-page-date">
+	                        <span class="thin">{{ media_info.released|date:"M" }}{{ media_info.released|date:"j" }}</span>{{ media_info.released|date:"Y" }}
+	                    </div>
+                    {% endif %}
+                    <div class="extras">
+                    	{% if media_info.runtime and media_info.runtime != "None" %}
+	                    	<span class="tidbit">{{ media_info.runtime }}<span class="thin">min</span></span>
+                    	{% endif %}
+                    	{% if media_info.genre_set.all|length > 0 %}
+                    	<span class="tidbit">
+                    		{% for genre in media_info.genre_set.all %}
+                    			{% if not forloop.first %}
+	                    			<span class="thin"> | </span>
+                    			{% endif %}
+		                    	<span class="thin">{{ genre }}</span>
+	                    	{% endfor %}
+                    	</span>
+                    	{% endif %}
+                    	{% if media_info.certification and media_info.certification != "None" and media_info.certification.length > 0 %}
+                    	<span class="tidbit rating">{{ media_info.certification }}</span>
+                    	{% endif %}
+                    </div>
+                </div></div>
+            </div>
+        </div>
+	</div>
+
+	{% if media_info.overview %}
+	<div class="row">
+		<div class="col-xs-2">
+		</div>
+		<div class="col-xs-8">
+			<hr>
+		</div>
+		<div class="col-xs-2">
+		</div>
+	</div>
+
+	<div class="row content-main">
+		<div class="col-xs-12">
+			{{ media_info.overview }}
+		</div>
+	</div>
+	{% endif %}
+
+	<div class="row">
+		<div class="col-xs-2">
+		</div>
+		<div class="col-xs-8">
+			<hr>
+		</div>
+		<div class="col-xs-2">
+		</div>
+	</div>
+
+	<div class="row content-main">
+		<div class="col-xs-2">
+		</div>
+		<div class="col-xs-8 technical-section">
+			[ information on stream/buy/rent/theater availability, trailer link, social network sharing links and maybe other info ]
+		</div>
+		<div class="col-xs-2">
+		</div>
+	</div>
+
+	<div class="row" style="height: 100px">
+		&nbsp;
+	</div>
+
+	<div class="row content-main">
+		<h1 class="lato">Cast</h1>
+		<div class="row nopadding">
+			<div class="link-row">
+			{% for member in media_people.cast %}
+				{% if media_people.cast|length > 18 and forloop.counter == 12 %}
+					<div class="col-xs-2 nopadding poster filter-button" id="showCast">
+						<div class="more-button" reg="0.2">
+							<div>
+								<span class="more-icon">{% include "converted_svg/person.svg.html" %}</span>
+								SHOW ALL {{ media_people.cast|length }} CAST MEMBERS
+							</div>
+						</div>
+						<div class="template">
+						</div>
+						<div class="character">&nbsp;</div>
+					</div>
+				{% endif %}
+					{% include 'poster_info_person.html' with title=member.character cast=True %}
+				{% if forloop.counter|divisibleby:6 %}
+					</div>
+					</div>
+					<div class="row nopadding {% if media_people.cast|length > 18 and forloop.counter > 11 %}cast_hidden{% endif %}">
+					<div class="link-row">
+				{% endif %}
+			{% endfor %}
+		</div>
+		</div>
+    </div>
+
+	<div class="row" style="height: 100px">
+		&nbsp;
+	</div>
+
+    <div class="row content-main">
+	    <h1 class="lato">Crew</h1>
+		<div class="row nopadding">
+			<div class="link-row">
+			{% for member in media_people.crew %}
+				{% if media_people.crew|length > 18 and forloop.counter == 12 %}
+					<div class="col-xs-2 nopadding poster filter-button" id="showCrew">
+						<div class="more-button" reg="0.2">
+							<div>
+								<span class="more-icon">{% include "converted_svg/person.svg.html" %}</span>
+								SHOW ALL {{ media_people.crew|length }} CREW MEMBERS
+							</div>
+						</div>
+						<div class="template">
+						</div>
+						<div class="character">&nbsp;</div>
+					</div>
+				{% endif %}
+					{% include 'poster_info_person.html' with title=member.job crew=True %}
+				{% if forloop.counter|divisibleby:6 %}
+					</div>
+					</div>
+					<div class="row nopadding {% if media_people.crew|length > 18 and forloop.counter > 11 %}crew_hidden{% endif %}">
+					<div class="link-row">
+				{% endif %}
+			{% endfor %}
+		</div>
+		</div>
+    </div>
+
+    <div class="row" style="height: 100px">
+		&nbsp;
+	</div>
+
+    <!-- <div class="row">
+		<div class="col-xs-2">
+		</div>
+		<div class="col-xs-8">
+			<hr>
+		</div>
+		<div class="col-xs-2">
+		</div>
+	</div> -->
+
+	<!-- <div class="row content-main">
+		<h1 class="lato">RELATED MOVIES</h1>
+	</div> -->
+</div>
+
+<a class="full-info" id="info-link">&nbsp;</a>
+
+<script src="{% static 'js/info_page.js' %}"></script>
+{% endblock %}
